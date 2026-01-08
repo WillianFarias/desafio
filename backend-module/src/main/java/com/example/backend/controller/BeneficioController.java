@@ -2,7 +2,6 @@ package com.example.backend.controller;
 
 import com.example.backend.model.Beneficio;
 import com.example.backend.service.BeneficioService;
-import com.example.ejb.BeneficioEjbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +20,18 @@ public class BeneficioController {
 
     @Autowired
     private TransferenciaService transferenciaService;
+
+    @GetMapping
+    public ResponseEntity<List<Beneficio>> listarTodos() {
+        return ResponseEntity.ok(beneficioService.listarTodos());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Beneficio> buscarPorId(@PathVariable Long id) {
+        return beneficioService.buscarPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
     @PostMapping("/transferir")
     public ResponseEntity<String> transferir(
