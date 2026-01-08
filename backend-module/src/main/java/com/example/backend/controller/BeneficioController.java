@@ -1,10 +1,12 @@
 package com.example.backend.controller;
 
-import com.example.backend.model.Beneficio;
+import com.example.backend.dto.BeneficioDTO;
+import com.example.backend.mapper.BeneficioMapper;
 import com.example.backend.service.BeneficioService;
 import com.example.backend.service.TransferenciaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,14 +37,21 @@ public class BeneficioController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Lista retornada com sucesso",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Beneficio.class))
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = BeneficioDTO.class))
+                            )
                     )
             }
     )
     @GetMapping
-    public ResponseEntity<List<Beneficio>> listarTodos() {
-        return ResponseEntity.ok(beneficioService.listarTodos());
+    public ResponseEntity<List<BeneficioDTO>> listarTodos() {
+        List<BeneficioDTO> dtos = beneficioService.listarTodos()
+                .stream()
+                .map(BeneficioMapper::toDTO)
+                .toList();
+
+        return ResponseEntity.ok(dtos);
     }
 
     @Operation(
@@ -52,8 +61,10 @@ public class BeneficioController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Benefício encontrado",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Beneficio.class))
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = BeneficioDTO.class)
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "404",
@@ -63,11 +74,12 @@ public class BeneficioController {
             }
     )
     @GetMapping("/{id}")
-    public ResponseEntity<Beneficio> buscarPorId(
+    public ResponseEntity<BeneficioDTO> buscarPorId(
             @Parameter(description = "ID do benefício", example = "1", required = true)
             @PathVariable Long id
     ) {
         return beneficioService.buscarPorId(id)
+                .map(BeneficioMapper::toDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
