@@ -1,0 +1,36 @@
+<div class="container">
+  <h2>Lista de Benefícios</h2>
+
+  <div *ngIf="mensagemErro" class="error-message">
+    {{ mensagemErro }}
+  </div>
+
+  <table *ngIf="beneficios.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Descrição</th>
+        <th>Saldo (R$)</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let b of beneficios">
+        <td>{{ b.id }}</td>
+        <td>{{ b.nome }}</td>
+        <td>{{ b.descricao }}</td>
+        <td class="valor">{{ b.valor | currency:'BRL' }}</td>
+        <td>
+          <span [class]="b.ativo ? 'status-ativo' : 'status-inativo'">
+            {{ b.ativo ? 'Ativo' : 'Inativo' }}
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="beneficios.length === 0 && !mensagemErro">
+    <p>Nenhum benefício encontrado.</p>
+  </div>
+</div>

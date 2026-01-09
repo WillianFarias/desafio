@@ -1,0 +1,43 @@
+.container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+.valor {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.status-ativo {
+  color: green;
+  font-weight: bold;
+}
+
+.status-inativo {
+  color: red;
+  font-weight: bold;
+}
+
+.error-message {
+  color: white;
+  background-color: #e74c3c;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
