@@ -174,7 +174,7 @@ O projeto inclui um módulo `ejb-module` representando uma **camada EJB legada**
 #### Justificativa
 O `ejb-module` foi mantido apenas como **referência arquitetural** e **preparação para produção**.
 
-✅ Em produção, ele poderia ser implantado em servidor Java EE e integrado (ex.: JNDI/REST/mensageria).
+Em produção, ele poderia ser implantado em servidor Java EE e integrado (ex.: JNDI/REST/mensageria).
 
 ## Troubleshooting
 
