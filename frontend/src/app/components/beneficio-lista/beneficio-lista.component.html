@@ -1,36 +1,55 @@
 <div class="container">
-  <h2>Lista de Benefícios</h2>
+  <h2>Gestão de Benefícios</h2>
 
-  <div *ngIf="mensagemErro" class="error-message">
-    {{ mensagemErro }}
-  </div>
+  <div *ngIf="mensagemSucesso" class="success-message">{{ mensagemSucesso }}</div>
+  <div *ngIf="mensagemErro" class="error-message">{{ mensagemErro }}</div>
 
-  <table *ngIf="beneficios.length > 0">
+  <table>
     <thead>
       <tr>
         <th>ID</th>
         <th>Nome</th>
-        <th>Descrição</th>
         <th>Saldo (R$)</th>
         <th>Status</th>
+        <th>Ação</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let b of beneficios">
+      <tr *ngFor="let b of beneficios" [class.selected]="beneficioOrigem?.id === b.id">
         <td>{{ b.id }}</td>
         <td>{{ b.nome }}</td>
-        <td>{{ b.descricao }}</td>
         <td class="valor">{{ b.valor | currency:'BRL' }}</td>
+        <td><span [class]="b.ativo ? 'status-ativo' : 'status-inativo'">{{ b.ativo ? 'Ativo' : 'Inativo' }}</span></td>
         <td>
-          <span [class]="b.ativo ? 'status-ativo' : 'status-inativo'">
-            {{ b.ativo ? 'Ativo' : 'Inativo' }}
-          </span>
+          <button (click)="selecionarOrigem(b)" [disabled]="!b.ativo">Transferir</button>
         </td>
       </tr>
     </tbody>
   </table>
 
-  <div *ngIf="beneficios.length === 0 && !mensagemErro">
-    <p>Nenhum benefício encontrado.</p>
+  <div *ngIf="beneficioOrigem" class="transfer-panel">
+    <h3>Transferir de: {{ beneficioOrigem.nome }}</h3>
+
+    <div class="form-group">
+      <label>Destino:</label>
+      <select [(ngModel)]="idDestino">
+        <option [ngValue]="null">Selecione o destino</option>
+        <ng-container *ngFor="let b of beneficios">
+          <option *ngIf="b.id !== beneficioOrigem.id" [value]="b.id">
+            {{ b.nome }} (Saldo: {{ b.valor | currency:'BRL' }})
+          </option>
+        </ng-container>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Valor (R$):</label>
+      <input type="number" [(ngModel)]="valorTransferencia" placeholder="0.00">
+    </div>
+
+    <div class="actions">
+      <button class="btn-confirm" (click)="executarTransferencia()">Confirmar Transferência</button>
+      <button class="btn-cancel" (click)="cancelar()">Cancelar</button>
+    </div>
   </div>
 </div>
